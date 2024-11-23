@@ -3,6 +3,7 @@ package com.example.demo.services.category;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.exceptions.AlreadyExistsException;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class CategoryService implements ICategoryService {
+    @Autowired
     private final CategoryRepository categoryRepository;
 
     @Override

@@ -8,6 +8,7 @@ import java.util.List;
 import javax.sql.rowset.serial.SerialBlob;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.dto.ImageDto;
@@ -17,19 +18,32 @@ import com.example.demo.models.Post;
 import com.example.demo.repository.ImageRepository;
 import com.example.demo.services.post.IPostService;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class ImageService implements IImageService {
+    
+    @Autowired
     private final ImageRepository imageRepository;
+    
+    @Autowired
     private final IPostService postService;
+    
+    @Autowired
+    private final Environment environment;
+    
     @Override
     public Image getImageById(Long id) {
-        return imageRepository.findById(id)
+        Image image = imageRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No image found with id: " + id));
+        return image;
     }
 
+    
     @Override
     public void deleteImageById(Long id) {
         imageRepository.findById(id).ifPresentOrElse(imageRepository::delete, () -> {
@@ -37,6 +51,7 @@ public class ImageService implements IImageService {
         });
     }
 
+    
     @Override
     public List<ImageDto> saveImages(List<MultipartFile> files, Long postId) {
         Post post = postService.getPostById(postId);
@@ -49,17 +64,17 @@ public class ImageService implements IImageService {
                 image.setImage(new SerialBlob(file.getBytes()));
                 image.setPost(post);
 
-                String nuildDownloadUrl = "/api/v1/images/image/download/";
-                String downloadUrl = nuildDownloadUrl + image.getId();
+                String buildDownloadUrl = environment.getProperty("api.prefix")+"/images/download/";
+                String downloadUrl = buildDownloadUrl + image.getId();
                 image.setDownloadUrl(downloadUrl);
                 Image savedImage = imageRepository.save(image);
                 
-                savedImage.setDownloadUrl(nuildDownloadUrl + savedImage.getId());
+                savedImage.setDownloadUrl(buildDownloadUrl + savedImage.getId());
                 imageRepository.save(savedImage);
 
                 ImageDto imageDto = new ImageDto();
-                imageDto.setImageId(savedImage.getId());
-                imageDto.setImageName(savedImage.getFileName());
+                imageDto.setId(savedImage.getId());
+                imageDto.setFileName(savedImage.getFileName());
                 imageDto.setDownloadUrl(savedImage.getDownloadUrl());
                 savedImageDtos.add(imageDto);
 
@@ -69,7 +84,7 @@ public class ImageService implements IImageService {
         }
         return savedImageDtos;
     }
-
+    
     @Override
     public void updateImage(MultipartFile file, Long imageId) {
         Image image = getImageById(imageId);
@@ -78,7 +93,7 @@ public class ImageService implements IImageService {
             image.setFileName(file.getOriginalFilename());
             image.setImage(new SerialBlob(file.getBytes()));
             imageRepository.save(image);
-        } catch (IOException | SQLException e) {
+        } catch (IOException| SQLException e) {
             throw new RuntimeException(e.getMessage());
         }
     }

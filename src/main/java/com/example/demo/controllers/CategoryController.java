@@ -53,7 +53,7 @@ public class CategoryController {
         try {
             Category category = categoryService.getCategoryById(id);
             return ResponseEntity.ok(new ApiResponse("success", category));
-        } catch (ResourceNotFoundException e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }
     }
@@ -64,7 +64,7 @@ public class CategoryController {
         try {
             Category category = categoryService.getCategoryByName(name);
             return ResponseEntity.ok(new ApiResponse("success", category));
-        } catch (ResourceNotFoundException e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }
     }
@@ -75,7 +75,7 @@ public class CategoryController {
         try {
             categoryService.deleteCategoryById(id);
             return ResponseEntity.ok(new ApiResponse("success", null));
-        } catch (ResourceNotFoundException e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }
     }
@@ -85,7 +85,7 @@ public class CategoryController {
         try {
             Category updatedCategory = categoryService.updateCategory(category, id);
             return ResponseEntity.ok(new ApiResponse("success", updatedCategory));
-        } catch (ResourceNotFoundException e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }
     }

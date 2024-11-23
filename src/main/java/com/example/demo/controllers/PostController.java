@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.PostDto;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.models.Post;
 import com.example.demo.requests.AddPostRequest;
@@ -48,7 +49,8 @@ public class PostController {
             if (posts.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse("No posts found", null));
             }
-            return ResponseEntity.ok(new ApiResponse("success", posts));
+            List<PostDto> convertedPosts = postService.getConvertedPosts(posts);
+            return ResponseEntity.ok(new ApiResponse("success", convertedPosts));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), null));
         }
@@ -59,7 +61,7 @@ public class PostController {
         try {
             Post post = postService.getPostById(id);
             return ResponseEntity.ok(new ApiResponse("success", post));
-        } catch (ResourceNotFoundException e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }
     }
@@ -91,6 +93,16 @@ public class PostController {
             return ResponseEntity.ok(new ApiResponse("success", null));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
+        }
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<ApiResponse> countPosts(@RequestParam String category) {
+        try {
+            Long count = postService.countPostsByCategory(category);
+            return ResponseEntity.ok(new ApiResponse("success", count));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), null));
         }
     }
 }

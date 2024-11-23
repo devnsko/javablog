@@ -25,8 +25,8 @@ public class Category {
     private Long id;
     private String name;
 
-    @OneToMany(mappedBy = "category")
     @JsonIgnore
+    @OneToMany(mappedBy = "category")
     private List<Post> posts;
 
     public Category(String name) {

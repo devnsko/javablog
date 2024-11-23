@@ -34,3 +34,7 @@ build/
 
 application.properties
 combined.txt
+*compose.yml
+*compose.yaml
+postgres_data
+pgdata
