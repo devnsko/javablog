@@ -2,18 +2,16 @@ package com.example.demo.services.post;
 
 import java.util.List;
 
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.dto.ImageDto;
-import com.example.demo.dto.PostDto;
+// import com.example.demo.dto.ImageDto;
+// import com.example.demo.dto.PostDto;
 import com.example.demo.exceptions.PostNotFoundException;
 import com.example.demo.models.Category;
-import com.example.demo.models.Image;
+// import com.example.demo.models.Image;
 import com.example.demo.models.Post;
 import com.example.demo.repository.CategoryRepository;
-import com.example.demo.repository.ImageRepository;
+// import com.example.demo.repository.ImageRepository;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.requests.AddPostRequest;
 import com.example.demo.requests.UpdatePostRequest;
@@ -24,14 +22,10 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class PostService implements IPostService {
-    @Autowired
+    
     private final PostRepository postRepository;
-    @Autowired
     private final CategoryRepository categoryRepository;
-    @Autowired
-    private final ImageRepository imageRepository;
-    @Autowired
-    private final ModelMapper modelMapper;
+    // private final ImageRepository imageRepository;
     
     @Override
     public Post addPost(AddPostRequest request) {
@@ -106,17 +100,18 @@ public class PostService implements IPostService {
         return postRepository.countByCategoryName(category);
     }
     
-    @Override
-    public List<PostDto> getConvertedPosts(List<Post> posts) {
-        return posts.stream().map(this::convertToDto).toList();
-    }
+    // @Override
+    // public List<PostDto> getConvertedPosts(List<Post> posts) {
+    //     return posts.stream().map(this::convertToDto).toList();
+    // }
     
-    @Override
-    public PostDto convertToDto(Post post) {
-        PostDto postDto = modelMapper.map(post, PostDto.class);
-        List<Image> images = imageRepository.findByPostId(post.getId());
-        List<ImageDto> imageDtos = images.stream().map(image -> modelMapper.map(image, ImageDto.class)).toList();
-        postDto.setImages(imageDtos);
-        return postDto;
-    }
+    // @Override
+    // public PostDto convertToDto(Post post) {
+    //     PostDto postDto = modelMapper.map(post, PostDto.class);
+    //     List<Image> images = imageRepository.findByPostId(post.getId());
+    //     List<ImageDto> imageDtos = images.stream().map(image -> modelMapper.map(image, ImageDto.class)).toList();
+    //     postDto.setImages(imageDtos);
+    //     return postDto;
+    // }
+
 }

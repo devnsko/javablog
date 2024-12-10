@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${blog.title}">blog</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Blog</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/blog">All blogs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/blog" th:text="${username}">Guest</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <h1 class="mb-4" th:text="${blog.title}">blog Title</h1>
+                <p class="text-muted" th:text="${blog.author_name}">blog Date</p>
+    <p th:text="'By: ' + ${blog.author_name}"></p>
+
+                <hr>
+                <div class="content mb-4">
+                    <p th:utext="${blog.content}">blog content goes here...</p>
+                </div>
+                <a href="/blog" class="btn btn-secondary">Back to All blogs</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

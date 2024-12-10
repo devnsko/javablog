@@ -21,7 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import com.example.demo.dto.ImageDto;
-import com.example.demo.exceptions.ResourceNotFoundException;
+// import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.models.Image;
 import com.example.demo.services.image.IImageService;
 
@@ -35,7 +35,7 @@ public class ImageController {
     private final IImageService imageService;
     
     
-    @PostMapping("/upload")
+    @PostMapping("/uploadold")
     public ResponseEntity<ApiResponse> saveImages(@RequestBody List<MultipartFile> files, @RequestParam Long postId) {
         try {
             List<ImageDto> imageDtos = imageService.saveImages(files, postId);

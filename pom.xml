@@ -27,7 +27,11 @@
 		<url/>
 	</scm>
 	<properties>
-		<java.version>17</java.version>
+        <java.version>17</java.version>
+        <org.mapstruct.version>1.6.3</org.mapstruct.version>
+        <lombok.version>1.18.30</lombok.version>
+		<lombok-mapstruct-binding>0.2.0</lombok-mapstruct-binding>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -47,10 +51,27 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		<dependency>
-		<groupId>org.modelmapper</groupId>
-		<artifactId>modelmapper</artifactId>
-		<version>2.4.4</version>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+			<version>${org.mapstruct.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok-mapstruct-binding</artifactId>
+			<version>${lombok-mapstruct-binding}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
@@ -61,6 +82,13 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-s3</artifactId>
+			<version>1.12.779</version>
+		</dependency>
+
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -74,21 +102,32 @@
 		</dependency>
 	</dependencies>
 
+	
 	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-
+        <plugins>
+            <plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-compiler-plugin</artifactId>
+			<configuration>
+				<annotationProcessorPaths>
+				<path>
+					<groupId>org.mapstruct</groupId>
+					<artifactId>mapstruct-processor</artifactId>
+					<version>${org.mapstruct.version}</version>
+				</path>
+				<path>
+					<groupId>org.projectlombok</groupId>
+					<artifactId>lombok</artifactId>
+					<version>%{lombok.version}</version>
+				</path>
+				<path>
+					<groupId>org.projectlombok</groupId>
+					<artifactId>lombok-mapstruct-binding</artifactId>
+					<version>${lombok-mapstruct-binding}</version>
+				</path>
+				</annotationProcessorPaths>
+			</configuration>
+		</plugin>
+        </plugins>
+    </build>
 </project>

@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.category.CategoryResponse;
 import com.example.demo.exceptions.AlreadyExistsException;
-import com.example.demo.exceptions.ResourceNotFoundException;
+// import com.example.demo.exceptions.ResourceNotFoundException;
+import com.example.demo.mappers.CategoryMapper;
 import com.example.demo.models.Category;
 import com.example.demo.services.category.ICategoryService;
 
@@ -26,12 +28,14 @@ import response.ApiResponse;
 @RequestMapping("${api.prefix}/categories")
 public class CategoryController {
     private final ICategoryService categoryService;
+    private final CategoryMapper categoryMapper;
 
     @GetMapping
     public ResponseEntity<ApiResponse> getAllCategory() {
         try {
             List<Category> categories = categoryService.getAllCategories();
-            return ResponseEntity.ok(new ApiResponse("success", categories));
+            List<CategoryResponse> categoriesResponse = categoryMapper.toCategoryResponseList(categories);
+            return ResponseEntity.ok(new ApiResponse("success", categoriesResponse));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("error", HttpStatus.INTERNAL_SERVER_ERROR));
         }
@@ -52,7 +56,8 @@ public class CategoryController {
     public ResponseEntity<ApiResponse> getCategoryById(@PathVariable Long id) {
         try {
             Category category = categoryService.getCategoryById(id);
-            return ResponseEntity.ok(new ApiResponse("success", category));
+            CategoryResponse categoryResponse = categoryMapper.toCategoryResponse(category);
+            return ResponseEntity.ok(new ApiResponse("success", categoryResponse));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }
@@ -63,7 +68,8 @@ public class CategoryController {
     public ResponseEntity<ApiResponse> getCategoryByName(@PathVariable String name) {
         try {
             Category category = categoryService.getCategoryByName(name);
-            return ResponseEntity.ok(new ApiResponse("success", category));
+            CategoryResponse categoryResponse = categoryMapper.toCategoryResponse(category);
+            return ResponseEntity.ok(new ApiResponse("success", categoryResponse));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }
@@ -84,7 +90,8 @@ public class CategoryController {
     public ResponseEntity<ApiResponse> updateCategoryById(@PathVariable Long id, @RequestBody Category category) {
         try {
             Category updatedCategory = categoryService.updateCategory(category, id);
-            return ResponseEntity.ok(new ApiResponse("success", updatedCategory));
+            CategoryResponse categoryResponse = categoryMapper.toCategoryResponse(updatedCategory);
+            return ResponseEntity.ok(new ApiResponse("success", categoryResponse));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }

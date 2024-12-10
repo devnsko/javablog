@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.dto.PostDto;
+// import com.example.demo.dto.PostDto;
+import com.example.demo.dto.post.PostResponse;
 import com.example.demo.exceptions.ResourceNotFoundException;
+import com.example.demo.mappers.PostMapper;
 import com.example.demo.models.Post;
 import com.example.demo.requests.AddPostRequest;
 import com.example.demo.requests.UpdatePostRequest;
@@ -29,6 +31,7 @@ import response.ApiResponse;
 @RequestMapping("${api.prefix}/posts")
 public class PostController {
     private final IPostService postService;
+    private final PostMapper postMapper;
 
     @GetMapping
     public ResponseEntity<ApiResponse> getPostsByCategoryAndAuthor(@RequestParam(required = false) String category, @RequestParam(required = false) String author) {
@@ -49,8 +52,9 @@ public class PostController {
             if (posts.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse("No posts found", null));
             }
-            List<PostDto> convertedPosts = postService.getConvertedPosts(posts);
-            return ResponseEntity.ok(new ApiResponse("success", convertedPosts));
+            // List<PostDto> convertedPosts = postService.getConvertedPosts(posts);
+            List<PostResponse> postsResponses = postMapper.toPostResponseList(posts);
+            return ResponseEntity.ok(new ApiResponse("success", postsResponses));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), null));
         }
@@ -60,7 +64,8 @@ public class PostController {
     public ResponseEntity<ApiResponse> getPostById(@PathVariable Long id) {
         try {
             Post post = postService.getPostById(id);
-            return ResponseEntity.ok(new ApiResponse("success", post));
+            PostResponse postResponse = postMapper.toPostResponse(post);
+            return ResponseEntity.ok(new ApiResponse("success", postResponse));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }
@@ -80,7 +85,8 @@ public class PostController {
     public ResponseEntity<ApiResponse> updatePost(@PathVariable Long id, @RequestBody UpdatePostRequest request) {
         try {
             Post post = postService.updatePostById(request, id);
-            return ResponseEntity.ok(new ApiResponse("success", post));
+            PostResponse postResponse = postMapper.toPostResponse(post);
+            return ResponseEntity.ok(new ApiResponse("success", postResponse));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }

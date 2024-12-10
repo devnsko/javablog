@@ -8,7 +8,6 @@ import java.util.List;
 import javax.sql.rowset.serial.SerialBlob;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.dto.ImageDto;
