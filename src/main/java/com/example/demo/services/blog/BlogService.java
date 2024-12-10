@@ -10,6 +10,9 @@ public interface BlogService {
     BlogResponse update(Blog blog, Long id);
     void delete(Long id);
     List<BlogResponse> getAll();
+    List<BlogResponse> getAllOrderByDescPageable(int page, int count);
+
     BlogResponse getById(Long id);
+
 
 }

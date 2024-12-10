@@ -3,6 +3,8 @@ package com.example.demo.services.blog;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.blog.BlogResponse;
@@ -29,6 +31,13 @@ public class BlogServiceImpl implements BlogService{
         return blogResponses;
     }
 
+    @Override
+    public List<BlogResponse> getAllOrderByDescPageable(int page, int count) {
+        Pageable pageable = PageRequest.of(page, count);
+        List<Blog> blogs = blogRepository.findAllByOrderByIdDesc(pageable);
+        List<BlogResponse> blogResponses = blogMapper.toBlogResponses(blogs);
+        return blogResponses;
+    }
     @Override
     public BlogResponse getById(Long id) {
         Blog blog = blogRepository.findById(id)

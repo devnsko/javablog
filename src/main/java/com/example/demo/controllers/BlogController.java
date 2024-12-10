@@ -15,17 +15,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.config.ModifiedUserDetails;
 import com.example.demo.dto.blog.BlogRequest;
 import com.example.demo.dto.blog.BlogResponse;
 import com.example.demo.dto.user.UserResponse;
 import com.example.demo.models.Blog;
-import com.example.demo.models.Post;
 import com.example.demo.models.User;
 import com.example.demo.services.blog.BlogService;
 import com.example.demo.services.user.UserService;
 
+import jakarta.websocket.server.PathParam;
 import lombok.AllArgsConstructor;
 import response.ApiResponse;
 
@@ -37,20 +38,23 @@ public class BlogController {
     private final UserService userService;
 
     @GetMapping
-    public String home() {
-        return "redirect:/blog";
-    }
-
-    @GetMapping("blog")
-    public String getAll(Model model) {
-        model.addAttribute("username", userService.getCurrentUserName());
-        model.addAttribute("blogs", blogService.getAll());
+    public String home(Model model, @RequestParam(required = false, defaultValue = "0") int page) {
+        Optional<ModifiedUserDetails> userOptional = userService.getCurrentUserDetails();
+        if (userOptional.isPresent()) {
+            User user = userOptional.get().getUser();
+            model.addAttribute("user", user);
+        }
+        model.addAttribute("blogs", blogService.getAllOrderByDescPageable(page,5));
         return "blog/list";
     }
 
     @GetMapping("blog/{id}")
     public String getById(@PathVariable Long id, Model model) {
-        model.addAttribute("username", userService.getCurrentUserName());
+        Optional<ModifiedUserDetails> userOptional = userService.getCurrentUserDetails();
+        if (userOptional.isPresent()) {
+            User user = userOptional.get().getUser();
+            model.addAttribute("user", user);
+        }
         model.addAttribute("blog", blogService.getById(id));
         return "blog/post";
     }
@@ -65,7 +69,11 @@ public class BlogController {
     @GetMapping("blog/new")
     @PreAuthorize("hasAuthority('ROLE_USER')")
     public String newPostForm(Model model) {
-        model.addAttribute("username", userService.getCurrentUserName());
+        Optional<ModifiedUserDetails> userOptional = userService.getCurrentUserDetails();
+        if (userOptional.isPresent()) {
+            User user = userOptional.get().getUser();
+            model.addAttribute("user", user);
+        }
         model.addAttribute("blogRequest", new BlogRequest()); // Pass an empty post object for form binding
         return "blog/new"; // Render "new.html" from templates/blog
     }
@@ -82,7 +90,7 @@ public class BlogController {
                         .author(user)
                         .build();
         blogService.create(blog);
-        return "redirect:/blog"; // Redirect back to the list of posts
+        return "redirect:/"; // Redirect back to the list of posts
     }
 
     // @PutMapping("blog/{id}")
@@ -99,6 +107,6 @@ public class BlogController {
     @GetMapping("blog/delete/{id}")
     public String deletePost(@PathVariable Long id) {
         blogService.delete(id);
-        return "redirect:/blog"; // Redirect back to the list of posts
+        return "redirect:/"; // Redirect back to the list of posts
     }
 }

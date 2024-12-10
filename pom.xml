@@ -28,6 +28,8 @@
 	</scm>
 	<properties>
         <java.version>17</java.version>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
         <org.mapstruct.version>1.6.3</org.mapstruct.version>
         <lombok.version>1.18.30</lombok.version>
 		<lombok-mapstruct-binding>0.2.0</lombok-mapstruct-binding>
@@ -80,16 +82,9 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
+			<version>${lombok.version}</version>
 			<optional>true</optional>
 		</dependency>
-
-		<dependency>
-			<groupId>com.amazonaws</groupId>
-			<artifactId>aws-java-sdk-s3</artifactId>
-			<version>1.12.779</version>
-		</dependency>
-
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -118,7 +113,7 @@
 				<path>
 					<groupId>org.projectlombok</groupId>
 					<artifactId>lombok</artifactId>
-					<version>%{lombok.version}</version>
+					<version>${lombok.version}</version>
 				</path>
 				<path>
 					<groupId>org.projectlombok</groupId>

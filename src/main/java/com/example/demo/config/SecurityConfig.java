@@ -54,7 +54,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Use the bean here
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/auth/**").permitAll()
+                    .requestMatchers("/auth/**", "/", "/error", "/error/**").permitAll()
                     // .anyRequest().permitAll()
                     .anyRequest().authenticated()
                 )

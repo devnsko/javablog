@@ -12,7 +12,7 @@ import com.example.demo.models.Blog;
 
 @Mapper(componentModel = "spring")
 public interface BlogMapper {
-
+    
     @Mappings({
         @Mapping(source = "id", target = "id"),
         @Mapping(source = "title", target = "title"),
