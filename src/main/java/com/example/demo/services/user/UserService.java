@@ -5,6 +5,7 @@ import java.util.Optional;
 import com.example.demo.config.ModifiedUserDetails;
 import com.example.demo.dto.user.UserRequest;
 import com.example.demo.dto.user.UserResponse;
+import com.example.demo.models.User;
 
 public interface UserService {
     UserResponse createUser(UserRequest userRequest);
@@ -13,5 +14,6 @@ public interface UserService {
     void deleteUser(Long id);
     boolean existsUserByEmail(String email);    
     String getCurrentUserName();
+    Optional<User> getCurrentUser();
     Optional<ModifiedUserDetails> getCurrentUserDetails();
 }

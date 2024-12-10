@@ -2,12 +2,13 @@ package com.example.demo.services.blog;
 
 import java.util.List;
 
+import com.example.demo.dto.blog.BlogRequest;
 import com.example.demo.dto.blog.BlogResponse;
 import com.example.demo.models.Blog;
 
 public interface BlogService {
-    BlogResponse create(Blog blog);
-    BlogResponse update(Blog blog, Long id);
+    BlogResponse create(BlogRequest blogRequest);
+    BlogResponse update(BlogRequest blogRequest, Long id);
     void delete(Long id);
     List<BlogResponse> getAll();
     List<BlogResponse> getAllOrderByDescPageable(int page, int count);

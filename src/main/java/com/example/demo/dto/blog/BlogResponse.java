@@ -8,5 +8,7 @@ public record BlogResponse(
     String title,
     String content,
     Long author_id,
-    String author_name
+    String author_name,
+    String createdAt,
+    String updatedAt
     ) { }

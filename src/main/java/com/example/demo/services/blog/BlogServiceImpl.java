@@ -7,11 +7,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.config.ModifiedUserDetails;
+import com.example.demo.dto.blog.BlogRequest;
 import com.example.demo.dto.blog.BlogResponse;
 import com.example.demo.mappers.BlogMapper;
-import com.example.demo.mappers.UserMapper;
 import com.example.demo.models.Blog;
+import com.example.demo.models.User;
 import com.example.demo.repository.BlogRepository;
+import com.example.demo.services.user.UserService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 public class BlogServiceImpl implements BlogService{
     private final BlogRepository blogRepository;
     private final BlogMapper blogMapper;
-    private final UserMapper userMapper;
+    private final UserService userService;
 
     @Override
     public List<BlogResponse> getAll() {
@@ -46,22 +49,27 @@ public class BlogServiceImpl implements BlogService{
     }
 
     @Override
-    public BlogResponse create(Blog blog) {
+    public BlogResponse create(BlogRequest blogRequest) {
+        Optional<ModifiedUserDetails> userOptional = userService.getCurrentUserDetails();
+        ModifiedUserDetails userDetails = userOptional.orElseThrow(() -> new RuntimeException("Issues with user"));
+        User user = userDetails.getUser();
+        Blog blog = Blog.builder()
+                        .title(blogRequest.getTitle())
+                        .content(blogRequest.getContent())
+                        .author(user)
+                        .build();
         Blog savedBlog = blogRepository.save(blog);
         return blogMapper.toBlogResponse(savedBlog);
     }
 
     @Override
-    public BlogResponse update(Blog blog, Long id) {
+    public BlogResponse update(BlogRequest blogRequest, Long id) {
         Optional<Blog> existingBlog = blogRepository.findById(id);
         if (existingBlog.isPresent()) {
-            Blog updatedBlog = Blog.builder()
-                    .id(existingBlog.get().getId())
-                    .title(blog.getTitle())
-                    .content(blog.getContent())
-                    .author(blog.getAuthor())
-                    .build();
-            Blog editedBlog = blogRepository.save(updatedBlog);
+            Blog blog = existingBlog.get();
+            blog.setTitle(blogRequest.getTitle());
+            blog.setContent(blogRequest.getContent());
+            Blog editedBlog = blogRepository.save(blog);
             return blogMapper.toBlogResponse(editedBlog);
         } else {
             return null;

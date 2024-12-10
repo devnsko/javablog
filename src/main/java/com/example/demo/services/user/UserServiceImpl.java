@@ -3,7 +3,6 @@ package com.example.demo.services.user;
 import java.util.Optional;
 
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +39,14 @@ public class UserServiceImpl implements UserService {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof ModifiedUserDetails) {
             return  Optional.of(((ModifiedUserDetails) principal));
+        } else return Optional.empty();
+    }
+
+    @Override
+    public Optional<User> getCurrentUser() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof ModifiedUserDetails) {
+            return Optional.of(((ModifiedUserDetails) principal).getUser());
         } else return Optional.empty();
     }
 

@@ -18,7 +18,9 @@ public interface BlogMapper {
         @Mapping(source = "title", target = "title"),
         @Mapping(source = "content", target = "content"),
         @Mapping(source = "author.name", target = "author_name"),
-        @Mapping(source = "author.id", target = "author_id")
+        @Mapping(source = "author.id", target = "author_id"),
+        @Mapping(source = "createdAt", target = "createdAt", dateFormat="yyyy-MM-dd HH:mm:ss"),
+        @Mapping(source = "updatedAt", target = "updatedAt", dateFormat="yyyy-MM-dd HH:mm:ss")
     })
     BlogResponse toBlogResponse(Blog blog);
 
