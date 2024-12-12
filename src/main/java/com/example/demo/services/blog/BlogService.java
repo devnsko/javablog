@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.example.demo.dto.blog.BlogRequest;
 import com.example.demo.dto.blog.BlogResponse;
-import com.example.demo.models.Blog;
 
 public interface BlogService {
     BlogResponse create(BlogRequest blogRequest);

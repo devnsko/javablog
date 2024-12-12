@@ -10,7 +10,6 @@ import com.example.demo.models.User;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface UserMapper {
 
-    
     @Mapping(source = "createdAt", target = "createdAt", dateFormat="yyyy-MM-dd HH:mm:ss")
     UserResponse toUserResponse(User user);
 }

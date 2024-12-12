@@ -4,13 +4,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.example.demo.dto.user.UserResponse;
-import com.example.demo.mappers.UserMapper;
 import com.example.demo.models.User;
 
 import lombok.AllArgsConstructor;
