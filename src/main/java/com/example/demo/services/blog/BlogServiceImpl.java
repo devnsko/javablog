@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.config.ModifiedUserDetails;
 import com.example.demo.dto.blog.BlogRequest;
 import com.example.demo.dto.blog.BlogResponse;
+import com.example.demo.dto.user.UserResponse;
 import com.example.demo.mappers.BlogMapper;
 import com.example.demo.models.Blog;
 import com.example.demo.models.User;
@@ -41,6 +42,14 @@ public class BlogServiceImpl implements BlogService{
         List<BlogResponse> blogResponses = blogMapper.toBlogResponses(blogs);
         return blogResponses;
     }
+
+    @Override
+    public List<BlogResponse> getByAuthorOrderByDesc(String author) {
+        List<Blog> blogs = blogRepository.findAllByAuthorNameOrderByIdDesc(author);
+        List<BlogResponse> blogResponses = blogMapper.toBlogResponses(blogs);
+        return blogResponses;
+    }
+
     @Override
     public BlogResponse getById(Long id) {
         Blog blog = blogRepository.findById(id)

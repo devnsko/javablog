@@ -26,12 +26,22 @@ public class BlogController {
     private final BlogService blogService;
 
     @GetMapping
-    public ResponseEntity<List<BlogResponse>> lastPosts(@RequestParam(defaultValue = "1") int page) {
+    public ResponseEntity<List<BlogResponse>> newestPosts(@RequestParam(defaultValue = "1") int page) {
         if (page <= 0) { page = 1; }
         page = page - 1;
         List<BlogResponse> blogResponses = blogService.getAllOrderByDescPageable(page,6);
         return ResponseEntity.ok(blogResponses);
     }
+    
+    @GetMapping("/by/{author}")
+    public ResponseEntity<?> newestPostsByAuthor(@PathVariable String author) {
+        if (author.isEmpty()) {
+            return ResponseEntity.badRequest().body("author is required");
+        }
+        List<BlogResponse> blogResponses = blogService.getByAuthorOrderByDesc(author);
+        return ResponseEntity.ok(blogResponses);
+    }
+    
 
     @GetMapping("/{id}")
     public ResponseEntity<?> postById(@PathVariable Long id) {

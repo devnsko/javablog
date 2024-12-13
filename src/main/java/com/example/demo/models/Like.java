@@ -1,16 +1,17 @@
 package com.example.demo.models;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import jakarta.persistence.Column;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,21 +25,21 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = "likes")
+public class Like {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String name;
-    private String email;
-    private String password;
-    private String roles;
+    @OneToOne
+    @JoinColumn(name = "blog_id")
+    @JsonIgnore
+    private Blog blog;
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    private User user;
     @CreationTimestamp
-    private LocalDateTime createdAt;
-
-    @OneToMany(mappedBy = "author")
-    private List<Blog> blogs;
+    private LocalDateTime likedAt;
 }

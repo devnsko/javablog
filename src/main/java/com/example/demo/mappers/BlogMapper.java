@@ -8,7 +8,9 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
 import com.example.demo.dto.blog.BlogResponse;
+import com.example.demo.dto.like.LikeResponse;
 import com.example.demo.models.Blog;
+import com.example.demo.models.Like;
 
 @Mapper(componentModel = "spring")
 public interface BlogMapper {
@@ -23,6 +25,16 @@ public interface BlogMapper {
         @Mapping(source = "updatedAt", target = "updatedAt", dateFormat="yyyy-MM-dd HH:mm:ss")
     })
     BlogResponse toBlogResponse(Blog blog);
+
+    
+    @Mappings({
+
+        @Mapping(source = "id", target = "id"),
+        @Mapping(source = "blog.id", target = "blogId"),
+        @Mapping(source = "user.id", target = "userId"),
+        @Mapping(source = "user.name", target = "userName")
+    })
+    LikeResponse toLikeResponse(Like like);
 
     List<BlogResponse> toBlogResponses(List<Blog> blogs);
 

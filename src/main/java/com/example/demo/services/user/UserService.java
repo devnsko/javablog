@@ -10,6 +10,8 @@ import com.example.demo.models.User;
 public interface UserService {
     UserResponse createUser(UserRequest userRequest);
     UserResponse getUser(Long id);
+    User getUserByName(String name);
+    UserResponse getUserResponseByName(String name);
     // UserResponse editUser(UserRequest userRequest);
     void deleteUser(Long id);
     boolean existsUserByEmail(String email);    

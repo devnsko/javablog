@@ -72,6 +72,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUserByName(String name) {
+        User user = userRepository.findByName(name)
+        .orElseThrow(() -> new RuntimeException("User not found"));
+        return user;
+    }
+
+    @Override
+    public UserResponse getUserResponseByName(String name) {
+        return userMapper.toUserResponse(getUserByName(name));
+    }
+    
+
+    @Override
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }

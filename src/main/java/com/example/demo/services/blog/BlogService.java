@@ -11,7 +11,7 @@ public interface BlogService {
     void delete(Long id);
     List<BlogResponse> getAll();
     List<BlogResponse> getAllOrderByDescPageable(int page, int count);
-
+    List<BlogResponse> getByAuthorOrderByDesc(String author);
     BlogResponse getById(Long id);
 
 

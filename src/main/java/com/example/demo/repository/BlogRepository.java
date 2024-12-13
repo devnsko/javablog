@@ -11,4 +11,6 @@ import com.example.demo.models.Blog;
 @Repository
 public interface BlogRepository extends JpaRepository<Blog, Long>{
     List<Blog> findAllByOrderByIdDesc(Pageable pageable);
+    List<Blog> findAllByAuthorNameOrderByIdDesc(String author);
+    
 }
