@@ -1,12 +1,11 @@
 package com.example.demo.services.user;
 
-import java.util.Optional;
+import java.util.List;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.config.ModifiedUserDetails;
 import com.example.demo.dto.user.UserRequest;
 import com.example.demo.dto.user.UserResponse;
 import com.example.demo.exceptions.ResourceNotFoundException;
@@ -22,47 +21,7 @@ public class UserServiceImpl implements UserService {
     
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-    private final PasswordEncoder passwordEncoder;
     
-    @Override
-    public String getCurrentUserName() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof ModifiedUserDetails) {
-            return ((ModifiedUserDetails) principal).getUsername();
-        } else {
-            return principal.toString();
-        }
-    }
-
-    @Override
-    public Optional<ModifiedUserDetails> getCurrentUserDetails() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof ModifiedUserDetails) {
-            return  Optional.of(((ModifiedUserDetails) principal));
-        } else return Optional.empty();
-    }
-
-    @Override
-    public Optional<User> getCurrentUser() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof ModifiedUserDetails) {
-            return Optional.of(((ModifiedUserDetails) principal).getUser());
-        } else return Optional.empty();
-    }
-
-    @Override
-    public UserResponse createUser(UserRequest userRequest) {
-        User user = User.builder()
-            .name(userRequest.getName())
-            .email(userRequest.getEmail())
-            .password(passwordEncoder.encode(userRequest.getPassword()))
-            .roles("ROLE_USER")
-            .build();
-        User savedUser = userRepository.save(user);
-        UserResponse userResponse = userMapper.toUserResponse(savedUser);
-        return userResponse;
-    }
-
     @Override
     public UserResponse getUser(Long id) {
         User user = userRepository.findById(id)
@@ -72,18 +31,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserByName(String name) {
-        User user = userRepository.findByName(name)
-        .orElseThrow(() -> new RuntimeException("User not found"));
-        return user;
+    public List<UserResponse> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        List<UserResponse> userResponses = userMapper.toUserResponses(users);
+        return userResponses;
     }
 
     @Override
-    public UserResponse getUserResponseByName(String name) {
-        return userMapper.toUserResponse(getUserByName(name));
+    public UserResponse getUserByName(String name) {
+        User user = userRepository.findByName(name)
+        .orElseThrow(() -> new RuntimeException("User not found"));
+        return userMapper.toUserResponse(user);
+    }   
+    
+    @Override
+    public UserResponse getUserByEmail(String email) {
+        User user = userRepository.findByEmail(email)
+        .orElseThrow(() -> new RuntimeException("User not found"));
+        return userMapper.toUserResponse(user);
     }
     
-
     @Override
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
@@ -92,5 +59,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean existsUserByEmail(String email) {
         return userRepository.existsByEmail(email);
+    }
+
+    @Override
+    public UserResponse editUser(UserRequest userRequest) {
+        User user = getCurrentUser();
+        user.setName(userRequest.getName());
+        user.setEmail(userRequest.getEmail());
+        User savedUser = userRepository.save(user);
+        return userMapper.toUserResponse(savedUser);
+    }
+
+    @Override 
+    public User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+        return currentUser;
     }
 }

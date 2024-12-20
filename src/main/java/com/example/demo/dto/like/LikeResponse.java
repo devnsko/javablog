@@ -4,7 +4,8 @@ public record LikeResponse(
     Long id,
     Long blogId,
     Long userId,
-    String userName
+    String userName,
+    String likedAt
 ) {
     
 }

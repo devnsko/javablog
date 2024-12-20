@@ -38,3 +38,4 @@ combined.txt
 *compose.yaml
 postgres_data
 pgdata
+application.log*

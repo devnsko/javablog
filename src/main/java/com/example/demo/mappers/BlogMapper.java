@@ -14,8 +14,8 @@ import com.example.demo.models.Like;
 
 @Mapper(componentModel = "spring")
 public interface BlogMapper {
-    
-    @Mappings({
+ 
+    @Mappings({ 
         @Mapping(source = "id", target = "id"),
         @Mapping(source = "title", target = "title"),
         @Mapping(source = "content", target = "content"),
@@ -32,7 +32,8 @@ public interface BlogMapper {
         @Mapping(source = "id", target = "id"),
         @Mapping(source = "blog.id", target = "blogId"),
         @Mapping(source = "user.id", target = "userId"),
-        @Mapping(source = "user.name", target = "userName")
+        @Mapping(source = "user.name", target = "userName"),
+        @Mapping(source = "likedAt", target = "likedAt", dateFormat="yyyy-MM-dd HH:mm:ss")
     })
     LikeResponse toLikeResponse(Like like);
 

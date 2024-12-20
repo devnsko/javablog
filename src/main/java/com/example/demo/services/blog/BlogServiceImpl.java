@@ -7,10 +7,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.config.ModifiedUserDetails;
 import com.example.demo.dto.blog.BlogRequest;
 import com.example.demo.dto.blog.BlogResponse;
-import com.example.demo.dto.user.UserResponse;
 import com.example.demo.mappers.BlogMapper;
 import com.example.demo.models.Blog;
 import com.example.demo.models.User;
@@ -59,9 +57,7 @@ public class BlogServiceImpl implements BlogService{
 
     @Override
     public BlogResponse create(BlogRequest blogRequest) {
-        Optional<ModifiedUserDetails> userOptional = userService.getCurrentUserDetails();
-        ModifiedUserDetails userDetails = userOptional.orElseThrow(() -> new RuntimeException("Issues with user"));
-        User user = userDetails.getUser();
+        User user = userService.getCurrentUser();
         Blog blog = Blog.builder()
                         .title(blogRequest.getTitle())
                         .content(blogRequest.getContent())
